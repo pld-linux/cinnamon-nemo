@@ -6,32 +6,34 @@
 Summary:	Nemo - file manager for Cinnamon desktop
 Summary(pl.UTF-8):	Nemo - zarządca plików dla środowiska Cinnamon
 Name:		cinnamon-nemo
-Version:	3.4.6
-Release:	2
+Version:	4.0.6
+Release:	1
 License:	LGPL v2+ (extensions API), GPL v2+ (Nemo itself)
 Group:		X11/Applications
 #Source0Download: https://github.com/linuxmint/nemo/releases
 Source0:	https://github.com/linuxmint/nemo/archive/%{version}/nemo-%{version}.tar.gz
-# Source0-md5:	00cd89cca684ea725aca1ffd549da73f
+# Source0-md5:	dd8165db5e2a06da85e9fcad0eae8571
+Patch0:		nemo-tracker2.patch
 URL:		http://cinnamon.linuxmint.com/
-BuildRequires:	autoconf >= 2.54
-BuildRequires:	automake >= 1:1.11
 BuildRequires:	cinnamon-desktop-devel >= 2.6.1
 BuildRequires:	exempi-devel >= 2.2.0
 BuildRequires:	gettext-tools
 BuildRequires:	glib2-devel >= 1:2.37.3
-BuildRequires:	gobject-introspection-devel >= 0.6.4
+BuildRequires:	gobject-introspection-devel >= 1.0
 BuildRequires:	gtk+3-devel >= 3.9.10
-BuildRequires:	gtk-doc >= 1.4
-BuildRequires:	intltool >= 0.40.1
+%{?with_apidocs:BuildRequires:	gtk-doc >= 1.4}
 BuildRequires:	libexif-devel >= 1:0.6.20
 BuildRequires:	libnotify-devel >= 0.7.0
 BuildRequires:	libselinux-devel >= 2.0
 BuildRequires:	libxml2-devel >= 1:2.7.8
+BuildRequires:	meson >= 0.41.0
+BuildRequires:	ninja >= 1.5
 BuildRequires:	pango-devel >= 1:1.28.3
 BuildRequires:	perl-base
 BuildRequires:	pkgconfig
+BuildRequires:	rpmbuild(macros) >= 1.736
 BuildRequires:	tracker-devel >= 1.0
+BuildRequires:	xapps-devel >= 1.4.0
 BuildRequires:	xorg-lib-libX11-devel
 Requires(post,postun):	glib2 >= 1:2.37.3
 Requires(post,postun):	gtk-update-icon-cache
@@ -47,6 +49,7 @@ Requires:	libxml2 >= 1:2.7.8
 Requires:	cinnamon-desktop >= 2.6.1
 Requires:	pango >= 1:1.28.3
 Requires:	shared-mime-info
+Requires:	xapps >= 1.4.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -104,34 +107,20 @@ Dokumentacja API biblioteki libnemo-extension.
 
 %prep
 %setup -q -n nemo-%{version}
+%patch0 -p1
 
 %build
-%{__glib_gettextize}
-%{__gtkdocize}
-%{__intltoolize}
-%{__libtoolize}
-%{__aclocal} -I m4
-%{__autoconf}
-%{__autoheader}
-%{__automake}
-%configure \
-	--disable-schemas-compile \
-	--disable-silent-rules \
-	--disable-update-mimedb \
-	--enable-debug%{!?debug:=no} \
-	%{?with_apidocs:--enable-gtk-doc} \
-	--with-html-dir=%{_gtkdocdir}
+%meson build \
+	%{?with_apidocs:-Dgtk_doc=true} \
+	-Dselinux=true \
+	-Dtracker=true
 
-%{__make}
+%ninja_build -C build
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT
-
-# obsoleted by pkg-config
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/lib*.la
+%ninja_install -C build
 
 # for external extensions (see libnemo-extension.pc for path)
 install -d $RPM_BUILD_ROOT%{_libdir}/nemo/extensions-3.0
@@ -170,8 +159,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/nemo-connect-server.1*
 %dir %{_libdir}/nemo
 %dir %{_libdir}/nemo/extensions-3.0
-%{_datadir}/dbus-1/services/org.Nemo.service
-%{_datadir}/dbus-1/services/org.nemo.freedesktop.FileManager1.service
+%{_datadir}/dbus-1/services/nemo.FileManager1.service
+%{_datadir}/dbus-1/services/nemo.service
 %{_datadir}/glib-2.0/schemas/org.nemo.gschema.xml
 %{_datadir}/gtksourceview-2.0/language-specs/nemo_action.lang
 %{_datadir}/gtksourceview-3.0/language-specs/nemo_action.lang
@@ -190,9 +179,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/hicolor/scalable/actions/collapse-menu-*symbolic.svg
 %{_iconsdir}/hicolor/scalable/actions/expand-menu-*symbolic.svg
 %{_iconsdir}/hicolor/scalable/actions/location-symbolic.svg
+%{_iconsdir}/hicolor/scalable/actions/mount-archive-symbolic.svg
+%{_iconsdir}/hicolor/scalable/actions/nemo-*-symbolic*.svg
 %{_iconsdir}/hicolor/scalable/actions/sidebar-*-symbolic.svg
 %{_iconsdir}/hicolor/scalable/actions/view-compact-symbolic.svg
 %{_iconsdir}/hicolor/scalable/apps/nemo.svg
+%{_iconsdir}/hicolor/scalable/devices/drive-removable-media-usb-symbolic.svg
+%{_iconsdir}/hicolor/scalable/status/nemo-bookmark-not-found-symbolic.svg
 
 %files libs
 %defattr(644,root,root,755)

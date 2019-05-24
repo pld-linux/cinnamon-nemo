@@ -1,0 +1,13 @@
+--- nemo-4.0.6/meson.build.orig	2018-12-15 15:00:45.000000000 +0100
++++ nemo-4.0.6/meson.build	2019-05-24 21:25:59.132347936 +0200
+@@ -90,7 +90,10 @@
+ if trackerChoice != 'false'
+   trackerRequired = (trackerChoice == 'true')
+   # Check all the possible versions
++    tracker_sparql = dependency('tracker-sparql-2.0',  required: false)
++  if not tracker_sparql.found()
+     tracker_sparql = dependency('tracker-sparql-1.0',  required: false)
++  endif
+   if not tracker_sparql.found()
+     tracker_sparql = dependency('tracker-sparql-0.18', required: false)
+   endif
