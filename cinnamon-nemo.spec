@@ -6,13 +6,16 @@
 Summary:	Nemo - file manager for Cinnamon desktop
 Summary(pl.UTF-8):	Nemo - zarządca plików dla środowiska Cinnamon
 Name:		cinnamon-nemo
-Version:	4.4.2
+Version:	4.6.0
 Release:	1
 License:	LGPL v2+ (extensions API), GPL v2+ (Nemo itself)
 Group:		X11/Applications
 #Source0Download: https://github.com/linuxmint/nemo/releases
 Source0:	https://github.com/linuxmint/nemo/archive/%{version}/nemo-%{version}.tar.gz
-# Source0-md5:	19dbde2f532fbb01e2c8ee4a7ddfe1f3
+# Source0-md5:	49de7512a468e67a056be7c68f1bff59
+#Source1Download: https://github.com/linuxmint/cinnamon-translations/releases
+Source1:	https://github.com/linuxmint/cinnamon-translations/archive/%{version}/cinnamon-translations-%{version}.tar.gz
+# Source1-md5:	2a7f336ad50c2ec8ec4e80a7acf5f899
 URL:		https://github.com/linuxmint/Cinnamon
 BuildRequires:	cinnamon-desktop-devel >= 2.6.1
 BuildRequires:	exempi-devel >= 2.2.0
@@ -104,7 +107,7 @@ libnemo-extension API documentation.
 Dokumentacja API biblioteki libnemo-extension.
 
 %prep
-%setup -q -n nemo-%{version}
+%setup -q -n nemo-%{version} -a1
 
 %build
 %meson build \
@@ -112,6 +115,8 @@ Dokumentacja API biblioteki libnemo-extension.
 	-Dselinux=true
 
 %ninja_build -C build
+
+%{__make} -C cinnamon-translations-%{version}
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -122,7 +127,16 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_libdir}/nemo/extensions-3.0
 install -d $RPM_BUILD_ROOT%{_datadir}/nemo/extensions
 
-#find_lang nemo
+cd cinnamon-translations-%{version}
+for f in usr/share/locale/*/LC_MESSAGES/nemo.mo ; do
+	install -D "$f" "$RPM_BUILD_ROOT/$f"
+done
+cd ..
+
+# not supported by glibc 2.31
+%{__rm} -r $RPM_BUILD_ROOT%{_localedir}/{frp,ie,jv,ksw}
+
+%find_lang nemo
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -140,8 +154,7 @@ rm -rf $RPM_BUILD_ROOT
 %post	libs -p /sbin/ldconfig
 %postun	libs -p /sbin/ldconfig
 
-%files
-# -f nemo.lang
+%files -f nemo.lang
 %defattr(644,root,root,755)
 %doc AUTHORS COPYING.EXTENSIONS ChangeLog NEWS README.md THANKS
 %attr(755,root,root) %{_bindir}/nemo
