@@ -156,7 +156,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f nemo.lang
 %defattr(644,root,root,755)
-%doc AUTHORS COPYING.EXTENSIONS ChangeLog NEWS README.md THANKS
+%doc AUTHORS COPYING.EXTENSIONS NEWS README.md THANKS debian/changelog
 %attr(755,root,root) %{_bindir}/nemo
 %attr(755,root,root) %{_bindir}/nemo-autorun-software
 %attr(755,root,root) %{_bindir}/nemo-connect-server
