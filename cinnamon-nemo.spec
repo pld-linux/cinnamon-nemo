@@ -96,9 +96,7 @@ Summary:	libnemo-extension API documentation
 Summary(pl.UTF-8):	Dokumentacja API biblioteki libnemo-extension
 Group:		Documentation
 Requires:	gtk-doc-common
-%if "%{_rpmversion}" >= "5"
 BuildArch:	noarch
-%endif
 
 %description apidocs
 libnemo-extension API documentation.
