@@ -1,42 +1,47 @@
 # NOTE: "nemo" package name is already occupied, so use cinnamon-nemo
 #
 # Conditional build:
-%bcond_without	apidocs		# disable gtk-doc
+%bcond_without	apidocs		# gtk-doc based API documentation
+%bcond_without	selinux		# SELinux support
+%bcond_without	tracker		# Tracker support
 
+%define		translations_version	4.8.3
 Summary:	Nemo - file manager for Cinnamon desktop
 Summary(pl.UTF-8):	Nemo - zarządca plików dla środowiska Cinnamon
 Name:		cinnamon-nemo
-Version:	4.6.0
+Version:	4.8.6
 Release:	1
 License:	LGPL v2+ (extensions API), GPL v2+ (Nemo itself)
 Group:		X11/Applications
 #Source0Download: https://github.com/linuxmint/nemo/releases
 Source0:	https://github.com/linuxmint/nemo/archive/%{version}/nemo-%{version}.tar.gz
-# Source0-md5:	49de7512a468e67a056be7c68f1bff59
+# Source0-md5:	86189a1dd576b01e853b0469d08d5186
 #Source1Download: https://github.com/linuxmint/cinnamon-translations/releases
-Source1:	https://github.com/linuxmint/cinnamon-translations/archive/%{version}/cinnamon-translations-%{version}.tar.gz
-# Source1-md5:	2a7f336ad50c2ec8ec4e80a7acf5f899
+Source1:	https://github.com/linuxmint/cinnamon-translations/archive/%{translations_version}/cinnamon-translations-%{translations_version}.tar.gz
+# Source1-md5:	a68529f0f1a6c7f8b693a81095bece96
 URL:		https://github.com/linuxmint/Cinnamon
-BuildRequires:	cinnamon-desktop-devel >= 2.6.1
+BuildRequires:	cinnamon-desktop-devel >= 4.8.0
 BuildRequires:	exempi-devel >= 2.2.0
 BuildRequires:	gettext-tools
-BuildRequires:	glib2-devel >= 1:2.37.3
+BuildRequires:	glib2-devel >= 1:2.45.7
 BuildRequires:	gobject-introspection-devel >= 1.0
-BuildRequires:	gtk+3-devel >= 3.9.10
+BuildRequires:	gtk+3-devel >= 3.10.0
 %{?with_apidocs:BuildRequires:	gtk-doc >= 1.4}
 BuildRequires:	libexif-devel >= 1:0.6.20
 BuildRequires:	libnotify-devel >= 0.7.0
-BuildRequires:	libselinux-devel >= 2.0
+%{?with_selinux:BuildRequires:	libselinux-devel >= 2.0}
 BuildRequires:	libxml2-devel >= 1:2.7.8
 BuildRequires:	meson >= 0.41.0
 BuildRequires:	ninja >= 1.5
 BuildRequires:	pango-devel >= 1:1.44.0
 BuildRequires:	perl-base
 BuildRequires:	pkgconfig
+BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.736
-BuildRequires:	xapps-devel >= 1.4.0
+%{?with_tracker:BuildRequires:	tracker-devel >= 2.0}
+BuildRequires:	xapps-devel >= 2.0.0
 BuildRequires:	xorg-lib-libX11-devel
-Requires(post,postun):	glib2 >= 1:2.37.3
+Requires(post,postun):	glib2 >= 1:2.45.7
 Requires(post,postun):	gtk-update-icon-cache
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	exempi >= 2.2.0
@@ -45,12 +50,13 @@ Requires:	gvfs
 Requires:	hicolor-icon-theme
 Requires:	libexif >= 1:0.6.20
 Requires:	libnotify >= 0.7.0
-Requires:	libselinux >= 2.0
+%{?with_selinux:Requires:	libselinux >= 2.0}
 Requires:	libxml2 >= 1:2.7.8
-Requires:	cinnamon-desktop >= 2.6.1
+Requires:	cinnamon-desktop >= 4.8.0
 Requires:	pango >= 1:1.44.0
 Requires:	shared-mime-info
-Requires:	xapps >= 1.4.0
+%{?with_tracker:Requires:	tracker >= 2.0}
+Requires:	xapps >= 2.0.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -64,8 +70,8 @@ Summary:	Library for Nemo extensions
 Summary(pl.UTF-8):	Biblioteka dla rozszerzeń Nemo
 License:	LGPL v2+
 Group:		Development/Libraries
-Requires:	glib2 >= 1:2.37.3
-Requires:	gtk+3 >= 3.9.10
+Requires:	glib2 >= 1:2.45.7
+Requires:	gtk+3 >= 3.10.0
 
 %description libs
 This package provides the library used by Nemo view extensions.
@@ -80,8 +86,8 @@ Summary(pl.UTF-8):	Pliki do tworzenia rozszerzeń Nemo
 License:	LGPL v2+
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
-Requires:	glib2-devel >= 1:2.37.3
-Requires:	gtk+3-devel >= 3.9.10
+Requires:	glib2-devel >= 1:2.45.7
+Requires:	gtk+3-devel >= 3.10.0
 
 %description devel
 This package provides the header files needed for developing Nemo
@@ -110,11 +116,12 @@ Dokumentacja API biblioteki libnemo-extension.
 %build
 %meson build \
 	%{?with_apidocs:-Dgtk_doc=true} \
-	-Dselinux=true
+	%{?with_selinux:-Dselinux=true} \
+	%{?with_tracker:-Dtracker=true}
 
 %ninja_build -C build
 
-%{__make} -C cinnamon-translations-%{version}
+%{__make} -C cinnamon-translations-%{translations_version}
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -125,7 +132,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_libdir}/nemo/extensions-3.0
 install -d $RPM_BUILD_ROOT%{_datadir}/nemo/extensions
 
-cd cinnamon-translations-%{version}
+cd cinnamon-translations-%{translations_version}
 for f in usr/share/locale/*/LC_MESSAGES/nemo.mo ; do
 	install -D "$f" "$RPM_BUILD_ROOT/$f"
 done
