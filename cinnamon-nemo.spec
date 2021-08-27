@@ -5,20 +5,20 @@
 %bcond_without	selinux		# SELinux support
 %bcond_without	tracker		# Tracker support
 
-%define		translations_version	4.8.3
+%define		translations_version	5.0.2
 Summary:	Nemo - file manager for Cinnamon desktop
 Summary(pl.UTF-8):	Nemo - zarządca plików dla środowiska Cinnamon
 Name:		cinnamon-nemo
-Version:	4.8.6
-Release:	2
+Version:	5.0.3
+Release:	1
 License:	LGPL v2+ (extensions API), GPL v2+ (Nemo itself)
 Group:		X11/Applications
 #Source0Download: https://github.com/linuxmint/nemo/releases
 Source0:	https://github.com/linuxmint/nemo/archive/%{version}/nemo-%{version}.tar.gz
-# Source0-md5:	86189a1dd576b01e853b0469d08d5186
+# Source0-md5:	19e2ea1ed7bb5d294ef1ffd7e3d84d21
 #Source1Download: https://github.com/linuxmint/cinnamon-translations/releases
 Source1:	https://github.com/linuxmint/cinnamon-translations/archive/%{translations_version}/cinnamon-translations-%{translations_version}.tar.gz
-# Source1-md5:	a68529f0f1a6c7f8b693a81095bece96
+# Source1-md5:	6e40b7f545138907148af3377e628d63
 URL:		https://github.com/linuxmint/Cinnamon
 BuildRequires:	cinnamon-desktop-devel >= 4.8.0
 BuildRequires:	exempi-devel >= 2.2.0
@@ -166,7 +166,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/nemo-autorun-software
 %attr(755,root,root) %{_bindir}/nemo-connect-server
 %attr(755,root,root) %{_bindir}/nemo-desktop
+%attr(755,root,root) %{_bindir}/nemo-mso-to-txt
 %attr(755,root,root) %{_bindir}/nemo-open-with
+%attr(755,root,root) %{_bindir}/nemo-ppt-to-txt
 %attr(755,root,root) %{_libexecdir}/nemo-convert-metadata
 %attr(755,root,root) %{_libexecdir}/nemo-extensions-list
 %{_mandir}/man1/nemo.1*
