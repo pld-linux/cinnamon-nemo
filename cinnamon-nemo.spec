@@ -10,7 +10,7 @@ Summary:	Nemo - file manager for Cinnamon desktop
 Summary(pl.UTF-8):	Nemo - zarządca plików dla środowiska Cinnamon
 Name:		cinnamon-nemo
 Version:	5.8.2
-Release:	1
+Release:	2
 License:	LGPL v2+ (extensions API), GPL v2+ (Nemo itself)
 Group:		X11/Applications
 #Source0Download: https://github.com/linuxmint/nemo/tags
@@ -143,8 +143,8 @@ for f in usr/share/locale/*/LC_MESSAGES/nemo.mo ; do
 done
 cd ..
 
-# not supported by glibc 2.31
-%{__rm} -r $RPM_BUILD_ROOT%{_localedir}/{frp,ie,jv,ksw,zgh}
+# not supported by glibc 2.37
+%{__rm} -r $RPM_BUILD_ROOT%{_localedir}/{frp,ie,jv,mo,ksw,zgh}
 
 %find_lang nemo
 
