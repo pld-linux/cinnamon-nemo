@@ -5,21 +5,20 @@
 %bcond_without	selinux		# SELinux support
 %bcond_without	tracker		# Tracker support
 
-%define		translations_version	5.8.1
+%define		translations_version	6.0.2
 Summary:	Nemo - file manager for Cinnamon desktop
 Summary(pl.UTF-8):	Nemo - zarządca plików dla środowiska Cinnamon
 Name:		cinnamon-nemo
-Version:	5.8.2
-Release:	2
+Version:	6.0.2
+Release:	1
 License:	LGPL v2+ (extensions API), GPL v2+ (Nemo itself)
 Group:		X11/Applications
 #Source0Download: https://github.com/linuxmint/nemo/tags
 Source0:	https://github.com/linuxmint/nemo/archive/%{version}/nemo-%{version}.tar.gz
-# Source0-md5:	c9a192aa8af54e1d0c53b5ba1ea8e641
+# Source0-md5:	68450318d0069be9ce249b07b6abca5a
 #Source1Download: https://github.com/linuxmint/cinnamon-translations/tags
 Source1:	https://github.com/linuxmint/cinnamon-translations/archive/%{translations_version}/cinnamon-translations-%{translations_version}.tar.gz
-# Source1-md5:	b9ea707443c81e4340b0cb219d289130
-Patch0:		nemo-update.patch
+# Source1-md5:	36552df46587be4e32ac311b8d7084e4
 URL:		https://github.com/linuxmint/Cinnamon
 BuildRequires:	cinnamon-desktop-devel >= 4.8.0
 BuildRequires:	exempi-devel >= 2.2.0
@@ -32,7 +31,7 @@ BuildRequires:	libexif-devel >= 1:0.6.20
 BuildRequires:	libnotify-devel >= 0.7.0
 %{?with_selinux:BuildRequires:	libselinux-devel >= 2.0}
 BuildRequires:	libxml2-devel >= 1:2.7.8
-BuildRequires:	meson >= 0.41.0
+BuildRequires:	meson >= 0.56.0
 BuildRequires:	ninja >= 1.5
 BuildRequires:	pango-devel >= 1:1.44.0
 BuildRequires:	perl-base
@@ -40,7 +39,7 @@ BuildRequires:	pkgconfig
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.736
 BuildRequires:	sed >= 4.0
-%{?with_tracker:BuildRequires:	tracker-devel >= 2.0}
+%{?with_tracker:BuildRequires:	tracker3-devel >= 3.0}
 BuildRequires:	xapps-devel >= 2.0.0
 BuildRequires:	xorg-lib-libX11-devel
 Requires(post,postun):	glib2 >= 1:2.45.7
@@ -57,7 +56,7 @@ Requires:	libxml2 >= 1:2.7.8
 Requires:	cinnamon-desktop >= 4.8.0
 Requires:	pango >= 1:1.44.0
 Requires:	shared-mime-info
-%{?with_tracker:Requires:	tracker >= 2.0}
+%{?with_tracker:Requires:	tracker3 >= 3.0}
 Requires:	xapps >= 2.0.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -114,7 +113,6 @@ Dokumentacja API biblioteki libnemo-extension.
 
 %prep
 %setup -q -n nemo-%{version} -a1
-%patch0 -p1
 
 %{__sed} -i -e '1s,/usr/bin/env bash,/bin/bash,' search-helpers/nemo-epub2text
 
@@ -176,7 +174,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/nemo-open-with
 %attr(755,root,root) %{_bindir}/nemo-ppt-to-txt
 %attr(755,root,root) %{_bindir}/nemo-xls-to-txt
-%attr(755,root,root) %{_libexecdir}/nemo-convert-metadata
 %attr(755,root,root) %{_libexecdir}/nemo-extensions-list
 %{_mandir}/man1/nemo.1*
 %{_mandir}/man1/nemo-connect-server.1*
@@ -200,7 +197,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/hicolor/16x16/actions/menu-sort-*.png
 %{_iconsdir}/hicolor/*x*/actions/nemo-eject.png
 %{_iconsdir}/hicolor/*x*/apps/nemo.png
-%{_iconsdir}/hicolor/48x48/status/progress-*.png
 %{_iconsdir}/hicolor/scalable/actions/location-symbolic*.svg
 %{_iconsdir}/hicolor/scalable/actions/mount-archive-symbolic.svg
 %{_iconsdir}/hicolor/scalable/actions/nemo-*-symbolic*.svg
@@ -209,6 +205,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/hicolor/scalable/apps/nemo.svg
 %{_iconsdir}/hicolor/scalable/devices/drive-removable-media-usb-symbolic.svg
 %{_iconsdir}/hicolor/scalable/status/nemo-bookmark-not-found-symbolic.svg
+%{_iconsdir}/hicolor/scalable/status/nemo-progress-*-symbolic.svg
 
 %files libs
 %defattr(644,root,root,755)
