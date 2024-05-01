@@ -141,8 +141,8 @@ for f in usr/share/locale/*/LC_MESSAGES/nemo.mo ; do
 done
 cd ..
 
-# not supported by glibc 2.37
-%{__rm} -r $RPM_BUILD_ROOT%{_localedir}/{frp,ie,jv,mo,ksw,zgh}
+# not supported by glibc 2.39
+%{__rm} -r $RPM_BUILD_ROOT%{_localedir}/{frp,ie,jv,mo,ksw,rue}
 
 %find_lang nemo
 
