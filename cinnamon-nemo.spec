@@ -5,20 +5,20 @@
 %bcond_without	selinux		# SELinux support
 %bcond_without	tracker		# Tracker support
 
-%define		translations_version	6.0.2
+%define		translations_version	6.2.2
 Summary:	Nemo - file manager for Cinnamon desktop
 Summary(pl.UTF-8):	Nemo - zarządca plików dla środowiska Cinnamon
 Name:		cinnamon-nemo
-Version:	6.0.2
+Version:	6.2.6
 Release:	1
 License:	LGPL v2+ (extensions API), GPL v2+ (Nemo itself)
 Group:		X11/Applications
 #Source0Download: https://github.com/linuxmint/nemo/tags
 Source0:	https://github.com/linuxmint/nemo/archive/%{version}/nemo-%{version}.tar.gz
-# Source0-md5:	68450318d0069be9ce249b07b6abca5a
+# Source0-md5:	898506f960ff2beb564184114d3cb6ce
 #Source1Download: https://github.com/linuxmint/cinnamon-translations/tags
 Source1:	https://github.com/linuxmint/cinnamon-translations/archive/%{translations_version}/cinnamon-translations-%{translations_version}.tar.gz
-# Source1-md5:	36552df46587be4e32ac311b8d7084e4
+# Source1-md5:	ca66b0eadc9416ef66384b3b278554ad
 URL:		https://github.com/linuxmint/Cinnamon
 BuildRequires:	cinnamon-desktop-devel >= 4.8.0
 BuildRequires:	exempi-devel >= 2.2.0
@@ -27,6 +27,7 @@ BuildRequires:	glib2-devel >= 1:2.45.7
 BuildRequires:	gobject-introspection-devel >= 1.0
 BuildRequires:	gtk+3-devel >= 3.10.0
 %{?with_apidocs:BuildRequires:	gtk-doc >= 1.4}
+BuildRequires:	json-glib-devel >= 1.6
 BuildRequires:	libexif-devel >= 1:0.6.20
 BuildRequires:	libnotify-devel >= 0.7.0
 %{?with_selinux:BuildRequires:	libselinux-devel >= 2.0}
@@ -49,6 +50,7 @@ Requires:	exempi >= 2.2.0
 Requires:	gsettings-desktop-schemas
 Requires:	gvfs
 Requires:	hicolor-icon-theme
+Requires:	json-glib >= 1.6
 Requires:	libexif >= 1:0.6.20
 Requires:	libnotify >= 0.7.0
 %{?with_selinux:Requires:	libselinux >= 2.0}
@@ -166,6 +168,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS COPYING.EXTENSIONS NEWS README.md THANKS debian/changelog
 %attr(755,root,root) %{_bindir}/nemo
+%attr(755,root,root) %{_bindir}/nemo-action-layout-editor
 %attr(755,root,root) %{_bindir}/nemo-autorun-software
 %attr(755,root,root) %{_bindir}/nemo-connect-server
 %attr(755,root,root) %{_bindir}/nemo-desktop
