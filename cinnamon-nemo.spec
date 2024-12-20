@@ -10,7 +10,7 @@ Summary:	Nemo - file manager for Cinnamon desktop
 Summary(pl.UTF-8):	Nemo - zarządca plików dla środowiska Cinnamon
 Name:		cinnamon-nemo
 Version:	6.4.3
-Release:	1
+Release:	2
 License:	LGPL v2+ (extensions API), GPL v2+ (Nemo itself)
 Group:		X11/Applications
 #Source0Download: https://github.com/linuxmint/nemo/tags
