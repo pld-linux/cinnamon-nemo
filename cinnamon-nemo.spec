@@ -5,20 +5,20 @@
 %bcond_without	selinux		# SELinux support
 %bcond_without	tracker		# Tracker support
 
-%define		translations_version	6.4.1
+%define		translations_version	6.4.2
 Summary:	Nemo - file manager for Cinnamon desktop
 Summary(pl.UTF-8):	Nemo - zarządca plików dla środowiska Cinnamon
 Name:		cinnamon-nemo
-Version:	6.4.3
-Release:	2
+Version:	6.4.5
+Release:	1
 License:	LGPL v2+ (extensions API), GPL v2+ (Nemo itself)
 Group:		X11/Applications
 #Source0Download: https://github.com/linuxmint/nemo/tags
 Source0:	https://github.com/linuxmint/nemo/archive/%{version}/nemo-%{version}.tar.gz
-# Source0-md5:	b72b144bf6cc6f764d775cd9023bb2cf
+# Source0-md5:	8aa031084128c7fb6d7b9c75cc53c84d
 #Source1Download: https://github.com/linuxmint/cinnamon-translations/tags
 Source1:	https://github.com/linuxmint/cinnamon-translations/archive/%{translations_version}/cinnamon-translations-%{translations_version}.tar.gz
-# Source1-md5:	2d12def6818b100664081e979343d214
+# Source1-md5:	2a92606a2dcdc696889f08edd12f6bb6
 URL:		https://github.com/linuxmint/Cinnamon
 BuildRequires:	cinnamon-desktop-devel >= 4.8.0
 BuildRequires:	exempi-devel >= 2.2.0
@@ -38,7 +38,7 @@ BuildRequires:	pango-devel >= 1:1.44.0
 BuildRequires:	perl-base
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-build >= 4.6
-BuildRequires:	rpmbuild(macros) >= 1.736
+BuildRequires:	rpmbuild(macros) >= 2.042
 BuildRequires:	sed >= 4.0
 %{?with_tracker:BuildRequires:	tracker3-devel >= 3.0}
 BuildRequires:	xapps-devel >= 2.0.0
@@ -119,19 +119,19 @@ Dokumentacja API biblioteki libnemo-extension.
 %{__sed} -i -e '1s,/usr/bin/env bash,/bin/bash,' search-helpers/nemo-epub2text
 
 %build
-%meson build \
+%meson \
 	%{?with_apidocs:-Dgtk_doc=true} \
 	%{?with_selinux:-Dselinux=true} \
 	%{?with_tracker:-Dtracker=true}
 
-%ninja_build -C build
+%meson_build
 
 %{__make} -C cinnamon-translations-%{translations_version}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%ninja_install -C build
+%meson_install
 
 # for external extensions (see libnemo-extension.pc for path)
 install -d $RPM_BUILD_ROOT%{_libdir}/nemo/extensions-3.0
