@@ -5,20 +5,20 @@
 %bcond_without	selinux		# SELinux support
 %bcond_without	tracker		# Tracker support
 
-%define		translations_version	6.4.2
+%define		translations_version	6.6.2
 Summary:	Nemo - file manager for Cinnamon desktop
 Summary(pl.UTF-8):	Nemo - zarządca plików dla środowiska Cinnamon
 Name:		cinnamon-nemo
-Version:	6.4.5
+Version:	6.6.4
 Release:	1
 License:	LGPL v2+ (extensions API), GPL v2+ (Nemo itself)
 Group:		X11/Applications
 #Source0Download: https://github.com/linuxmint/nemo/tags
 Source0:	https://github.com/linuxmint/nemo/archive/%{version}/nemo-%{version}.tar.gz
-# Source0-md5:	8aa031084128c7fb6d7b9c75cc53c84d
+# Source0-md5:	1aabba38d6216bedf5f369a6bcedf26d
 #Source1Download: https://github.com/linuxmint/cinnamon-translations/tags
 Source1:	https://github.com/linuxmint/cinnamon-translations/archive/%{translations_version}/cinnamon-translations-%{translations_version}.tar.gz
-# Source1-md5:	2a92606a2dcdc696889f08edd12f6bb6
+# Source1-md5:	56b012e29677ac11d2f208caed30c8d6
 URL:		https://github.com/linuxmint/Cinnamon
 BuildRequires:	cinnamon-desktop-devel >= 4.8.0
 BuildRequires:	exempi-devel >= 2.2.0
@@ -201,25 +201,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/hicolor/16x16/actions/menu-sort-*.png
 %{_iconsdir}/hicolor/*x*/actions/nemo-eject.png
 %{_iconsdir}/hicolor/*x*/apps/nemo.png
-%{_iconsdir}/hicolor/scalable/actions/location-symbolic*.svg
-%{_iconsdir}/hicolor/scalable/actions/mount-archive-symbolic.svg
 %{_iconsdir}/hicolor/scalable/actions/nemo-*-symbolic*.svg
-%{_iconsdir}/hicolor/scalable/actions/sidebar-*-symbolic*.svg
-%{_iconsdir}/hicolor/scalable/actions/view-compact-symbolic.svg
 %{_iconsdir}/hicolor/scalable/apps/nemo.svg
-%{_iconsdir}/hicolor/scalable/devices/drive-removable-media-usb-symbolic.svg
-%{_iconsdir}/hicolor/scalable/status/nemo-bookmark-not-found-symbolic.svg
 %{_iconsdir}/hicolor/scalable/status/nemo-progress-*-symbolic.svg
 
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libnemo-extension.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libnemo-extension.so.1
+%{_libdir}/libnemo-extension.so.*.*.*
+%ghost %{_libdir}/libnemo-extension.so.1
 %{_libdir}/girepository-1.0/Nemo-3.0.typelib
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libnemo-extension.so
+%{_libdir}/libnemo-extension.so
 %{_includedir}/nemo
 %{_datadir}/gir-1.0/Nemo-3.0.gir
 %{_pkgconfigdir}/libnemo-extension.pc
